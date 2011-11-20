@@ -122,7 +122,7 @@ usermod -a -G rvm,www-data $RVMUSR
 ###################################
 curl -L http://bit.ly/sRbqye > /etc/gemrc
 su - $RVMUSR -c "rvm install $RUBY -C --sysconfdir=/etc"
-su - $RVMUSR -c "rvm use --default $RUBY"
+su - $RVMUSR -c "rvm use --default $RUBY@global"
 
 #################
 # Install Rails
@@ -134,14 +134,21 @@ su - $RVMUSR -c "rvm use --default $RUBY"
 # Install God
 #################
 su - $RVMUSR -c "gem install god"
+su - $RVMUSR -c "rvm wrapper $RUBY@global bootup god"
+
+# Create the god directory
 mkdir /etc/god
 
-# God Configuration
+# God Configuration Scripts
 curl -L http://bit.ly/trHF90 > /etc/init.d/god
 curl -L http://bit.ly/ufNax2 > /etc/default/god
 curl -L http://bit.ly/ryFCTB > /etc/god/file_watch.god
 curl -L http://bit.ly/uNOUDQ > /etc/god/nginx.god
 curl -L http://bit.ly/sxkZRP > /etc/god/mysql.god
+
+# Make Executable and Start
+chmod +x /etc/init.d/god
+/etc/init.d/god start
 
 #################
 # Deployment User
