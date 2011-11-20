@@ -1,5 +1,5 @@
 God.watch do |w|
-  w.pid_file = "/tmp/nginx.pid"
+  w.pid_file = "/var/run/nginx.pid"
   w.name = "nginx"
   w.interval = 30.seconds # default
   w.start = "/opt/nginx/sbin/nginx"
