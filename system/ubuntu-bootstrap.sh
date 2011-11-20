@@ -129,8 +129,25 @@ su - $RVMUSR -c "rvm use --default $RUBY"
 #################
 # Disabled, installed per app via bundler
 # gem install rails bundler --no-ri --no-rdoc
+
+#################
+# Install God
+#################
 su - $RVMUSR -c "gem install god"
-su - $RVMUSR -
+mkdir /etc/god
+
+# Default God Config
+curl -L http://bit.ly/f7QYpy > /etc/default/god
+
+# File Watch God Config ( Restarts all Services )
+curl -L http://bit.ly/f7QYpy > /etc/god/file_watch.god
+
+# Nginx God Config
+curl -L http://bit.ly/f7QYpy > /etc/god/nginx.god
+
+# MySQL God COnfig
+curl -L http://bit.ly/f7QYpy > /etc/god/mysql.god
+
 
 #################
 # Deployment User
@@ -230,6 +247,10 @@ then
 
   # Tunes MySQL's memory usage to utilize the percentage of memory you specify, defaulting to 40%
   sed -i -e 's/^#skip-innodb/skip-innodb/' /etc/mysql/my.cnf # disable innodb - saves about 100M
+  
+  # Add pid file to my.cnf
+  awk '{if (/\[mysqld\]/) {print $0 "\npid-file = /var/run/mysqld/mysqld.pid"} else {print $0} }' /etc/mysql/my.cnf > /etc/mysql/my.cnf
+  
 
   MEM=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo) # how much memory in MB this system has
   MYMEM=$((MEM*MYSQL_PERCENT/100)) # how much memory we'd like to tune mysql with
@@ -252,6 +273,7 @@ then
   done
 
   sed -i -e "s/\(\[mysqld\]\)/\1\n$config\n/" /etc/mysql/my.cnf
+  sed -i -e "s/\(\[mysqld\]\)/\1\npid = \/var\/run\/mysqld\/mysqld.pid/" /etc/mysql/my.cnf
   service mysql restart
 fi
 
