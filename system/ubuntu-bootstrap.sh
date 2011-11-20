@@ -136,18 +136,12 @@ su - $RVMUSR -c "rvm use --default $RUBY"
 su - $RVMUSR -c "gem install god"
 mkdir /etc/god
 
-# Default God Config
-curl -L http://bit.ly/f7QYpy > /etc/default/god
-
-# File Watch God Config ( Restarts all Services )
-curl -L http://bit.ly/f7QYpy > /etc/god/file_watch.god
-
-# Nginx God Config
-curl -L http://bit.ly/f7QYpy > /etc/god/nginx.god
-
-# MySQL God COnfig
-curl -L http://bit.ly/f7QYpy > /etc/god/mysql.god
-
+# God Configuration
+curl -L http://bit.ly/trHF90 > /etc/init.d/god
+curl -L http://bit.ly/ufNax2 > /etc/default/god
+curl -L http://bit.ly/ryFCTB > /etc/god/file_watch.god
+curl -L http://bit.ly/uNOUDQ > /etc/god/nginx.god
+curl -L http://bit.ly/sxkZRP > /etc/god/mysql.god
 
 #################
 # Deployment User
@@ -196,7 +190,7 @@ cd $NGINX_DIR
 make
 make install
 
-curl -L http://bit.ly/f7QYpy > /opt/nginx/conf/nginx.conf         # Nginx Base Config
+curl -L http://bit.ly/w2Xmzj > /opt/nginx/conf/nginx.conf         # Nginx Base Config
 /opt/nginx/sbin/nginx                                             # Start the server
 
 #################
@@ -247,10 +241,6 @@ then
 
   # Tunes MySQL's memory usage to utilize the percentage of memory you specify, defaulting to 40%
   sed -i -e 's/^#skip-innodb/skip-innodb/' /etc/mysql/my.cnf # disable innodb - saves about 100M
-  
-  # Add pid file to my.cnf
-  awk '{if (/\[mysqld\]/) {print $0 "\npid-file = /var/run/mysqld/mysqld.pid"} else {print $0} }' /etc/mysql/my.cnf > /etc/mysql/my.cnf
-  
 
   MEM=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo) # how much memory in MB this system has
   MYMEM=$((MEM*MYSQL_PERCENT/100)) # how much memory we'd like to tune mysql with
