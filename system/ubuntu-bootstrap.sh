@@ -120,7 +120,7 @@ usermod -a -G rvm,www-data $RVMUSR
 ###################################
 # Install ruby, and set default
 ###################################
-echo 'gem: --no-ri --no-rdoc' >> /etc/gemrc
+curl -L http://bit.ly/sRbqye > /etc/gemrc
 su - $RVMUSR -c "rvm install $RUBY -C --sysconfdir=/etc"
 su - $RVMUSR -c "rvm use --default $RUBY"
 
