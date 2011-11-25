@@ -11,20 +11,14 @@ NGINX_TGZ="nginx-1.0.2.tar.gz"
 NGINX_DIR="nginx-1.0.2"
 
 # Download and unpack Nginx
-wget $NGINX_URL
-tar zvxf $NGINX_TGZ
+wget -q $NGINX_URL
+tar zxf $NGINX_TGZ
 
 # Move into the directory and configure
 cd $NGINX_DIR
 
-./configure \
---prefix=/opt/nginx \
---with-http_gzip_static_module \
---pid-path=/var/run \
---with-pcre \
->> /tmp/nginx.build.log 2>&1
-
 # Build and Install
+./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre >> /tmp/nginx.build.log 2>&1
 make >> /tmp/nginx.build.log 2>&1
 make install >> /tmp/nginx.build.log 2>&1
 
@@ -32,7 +26,7 @@ make install >> /tmp/nginx.build.log 2>&1
 curl -sL http://git.io/IGCwnw > /opt/nginx/conf/nginx.conf
 
 # Create the log dir
-mkdir /var/logs/nginx
+mkdir /var/log/nginx
 
 # Start Nginx
 /opt/nginx/sbin/nginx

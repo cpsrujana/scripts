@@ -42,8 +42,6 @@ function set_mysql_password {
 }
 set_mysql_password
 
-echo "${txtgrn}# Installing MySQL${txtrst}"
-
 echo "mysql-server-5.1 mysql-server/root_password password $MYSQL_PASSWORD" | debconf-set-selections
 echo "mysql-server-5.1 mysql-server/root_password_again password $MYSQL_PASSWORD" | debconf-set-selections
 apt-get -y -qq install mysql-server mysql-client >> /tmp/mysql.build.log 2>&1

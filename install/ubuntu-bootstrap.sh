@@ -68,14 +68,14 @@ fi
 #################
 # System Update
 #################
-echo "${txtgrn}# Updating your system${txtrst}"
+echo "${txtgrn}Updating your system${txtrst}"
 
 apt-get -y -qq2 update > /tmp/installer.update.log 2>&1
 
 ########################################
 # Install the required dependencies
 ########################################
-echo "${txtgrn}# Installing Dependencies${txtrst}"
+echo "${txtgrn}Installing Dependencies${txtrst}"
 
 apt-get -y -qq install build-essential \
 libxml2-dev \
@@ -106,7 +106,7 @@ mkpasswd \
 #################
 # Install rvm
 #################
-echo "${txtgrn}# Installing RVM and Ruby on Rails${txtrst}"
+echo "${txtgrn}Installing RVM and Ruby on Rails${txtrst}"
 
 bash < <(curl -s https://rvm.beginrescueend.com/install/rvm) > /tmp/rvm.log 2>&1
 . "/usr/local/rvm/scripts/rvm"
@@ -115,13 +115,13 @@ bash < <(curl -s https://rvm.beginrescueend.com/install/rvm) > /tmp/rvm.log 2>&1
 # Setup RVM environment
 ###########################
 echo '[[ -s "/usr/local/rvm/scripts/rvm" ]] && source "/usr/local/rvm/scripts/rvm"' >> /home/$rvmusr/.profile
-echo "${txtgrn}# Adding users to rvm and www-data groups${txtrst}"
+echo "${txtgrn}Adding users to rvm and www-data groups${txtrst}"
 usermod -a -G rvm,www-data $rvmusr
 
 ###################################
 # Install ruby, and set default
 ###################################
-echo "${txtgrn}# Installing Ruby${txtrst}"
+echo "${txtgrn}Installing Ruby${txtrst}"
 curl -sL http://git.io/0UeTHA > /etc/gemrc
 su - $rvmusr -c "rvm install $ruby -C --sysconfdir=/etc"
 su - $rvmusr -c "rvm use --default $ruby@global"
@@ -129,7 +129,7 @@ su - $rvmusr -c "rvm use --default $ruby@global"
 #################
 # Install God
 #################
-echo "${txtgrn}# Installing God${txtrst}"
+echo "${txtgrn}Installing God${txtrst}"
 su - $rvmusr -c "gem install god"
 su - $rvmusr -c "rvm wrapper $ruby@global bootup god"
 
@@ -151,7 +151,7 @@ chmod +x /etc/init.d/god
 #################
 # Deployment User
 #################
-echo "${txtgrn}# Creating Deployment User${txtrst}"
+echo "${txtgrn}Creating Deployment User${txtrst}"
 function create_deployment_user {
   echo "${txtylw}What would you like your deployment password to be?${txtrst}"
   read deploy_password
@@ -180,7 +180,7 @@ create_deployment_user
 #################
 # App Dir
 #################
-echo "${txtgrn}# Creating Application Directory${txtrst}"
+echo "${txtgrn}Creating Application Directory${txtrst}"
 mkdir -p $appdir
 chown -R root:www-data $appdir
 chmod -R 2775 $appdir
@@ -189,7 +189,7 @@ chmod -R +s $appdir
 #################
 # Install Redis
 #################
-echo "${txtgrn}# Installing Redis${txtrst}"
+echo "${txtgrn}Installing Redis${txtrst}"
 bash < <(curl -sL http://git.io/6hJU6Q)
 
 #################
@@ -201,10 +201,9 @@ bash < <(curl -sL http://git.io/n9C8kg)
 ############################
 # Install the selected DB
 ############################
-echo "${txtgrn}# Installing $database${txtrst}"
-
 if [[ $database == "mysql" ]]
 then
+  echo "${txtgrn}Installing MySQL${txtrst}"
   bash <(curl -sL http://git.io/6kmGow)
 fi
 
