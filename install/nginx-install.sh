@@ -25,7 +25,8 @@ cd $NGINX_DIR
 --with-pcre
 
 # Build and Install
-make && make install
+make
+make install
 
 # Download the config
 curl -L http://git.io/IGCwnw > /opt/nginx/conf/nginx.conf

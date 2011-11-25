@@ -195,7 +195,7 @@ echo "# Installing $DATABASE"
 
 if [[ $DATABASE == "mysql" ]]
 then
-  bash < <(curl -L http://git.io/6kmGow)
+  bash <(curl -L http://git.io/6kmGow)
 fi
 
 # Restore STTY
