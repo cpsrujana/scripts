@@ -31,4 +31,5 @@ make && make install
 curl -L http://git.io/IGCwnw > /opt/nginx/conf/nginx.conf
 
 # Start Nginx
+echo "# Starting Nginx"
 /opt/nginx/sbin/nginx

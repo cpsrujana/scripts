@@ -79,7 +79,6 @@ libcurl4-openssl-dev \
 libreadline-dev \
 libncurses5-dev \
 libpcre3-dev \
-libmysqlclient-dev \
 sqlite3 \
 libsqlite3-dev \
 libc6-dev \
@@ -167,7 +166,7 @@ function create_deployment_user {
   fi
 }
 
-create_deployment_user                                            # Start the server
+create_deployment_user
 
 #################
 # App Dir
@@ -178,10 +177,15 @@ chmod -R 2775 $APPDIR
 chmod -R +s $APPDIR
 
 #################
+# Install Redis
+#################
+echo "# Installing Redis"
+bash < <(curl -sL http://git.io/6hJU6Q)
+
+#################
 # Install Nginx
 #################
 echo "# Installing Nginx"
-
 bash < <(curl -sL http://git.io/n9C8kg)
 
 ############################
@@ -191,7 +195,7 @@ echo "# Installing $DATABASE"
 
 if [[ $DATABASE == "mysql" ]]
 then
-  bash < <(curl -sL http://git.io/6kmGow)
+  bash < <(curl -L http://git.io/6kmGow)
 fi
 
 # Restore STTY

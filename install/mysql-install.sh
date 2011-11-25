@@ -9,7 +9,7 @@
 #######################################
 # Install Required Dependencies
 #######################################
-apt-get -y -q=2 install mysql-client
+apt-get -y -q=2 install mysql-client libmysqlclient-dev
 
 #######################################
 # Install MySQL

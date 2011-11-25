@@ -9,24 +9,24 @@
 # Short-Description:    God
 ### END INIT INFO
 
-GOD_BIN='/usr/local/rvm/bin/bootup_god'
-GOD_PID='/var/run/god.pid'
-GOD_LOG='/var/log/god.log'
-GOD_CONFIG='/etc/default/god'
+REDIS_BIN='/opt/redis/redis-server'
+REDIS_PID='/var/run/redis.pid'
+REDIS_LOG='/var/log/redis.log'
+REDIS_CONFIG='/etc/default/redis'
 
-NAME=god
-DESC=god
+NAME=redis
+DESC=redis
 
 set -e
 
 # Make sure the binary and the config file are present before proceeding
-test -x $GOD_BIN || exit 0
+test -x $REDIS_BIN || exit 0
 
 . /lib/lsb/init-functions
 
 RETVAL=0
 
-if [ -f $GOD_PID ]; then
+if [ -f $REDIS_PID ]; then
   echo -n "$DESC already running. Aborting.\n"
   exit $RETVAL
 fi;
@@ -34,13 +34,13 @@ fi;
 case "$1" in
   start)
     echo -n "Starting $DESC:\n"
-    $GOD_BIN -c $GOD_CONFIG -P $GOD_PID -l $GOD_LOG --log-level debug
+    $REDIS_BIN $REDIS_CONFIG
     RETVAL=$?
     ;;
   stop)
     echo -n "Stopping $DESC:\n"
-    kill `cat /var/run/god.pid`
-    rm $GOD_PID
+    kill `cat /var/run/redis.pid`
+    rm $REDIS_PID
     RETVAL=$?
     ;;
   restart)
@@ -48,11 +48,11 @@ case "$1" in
     $0 start
     ;;
   status)
-    $GOD_BIN status
+    $REDIS_BIN status
     RETVAL=$?
     ;;
   *)
-    echo "Usage: god {start|stop|restart|status}"
+    echo "Usage: redis {start|stop|restart|status}"
     exit 1
     ;;
 esac
