@@ -16,7 +16,7 @@ tar zvxf $REDIS_TGZ
 
 # Move into the directory and build
 cd $REDIS_DIR
-make -s
+make > /tmp/redis.build.log 2>&1
 
 # Copy the executables to the /opt/redis directory
 mkdir /opt/redis
@@ -27,10 +27,10 @@ cp src/redis-check-aof /opt/redis/
 cp src/redis-check-dump /opt/redis/
 
 # Download the pre-defined config
-curl -L http://git.io/pu0alA > /etc/default/redis
+curl -sL http://git.io/pu0alA > /etc/default/redis
 
 # Download the init script, and make executable
-curl -L http://git.io/w4GcUg > /etc/init.d/redis
+curl -sL http://git.io/w4GcUg > /etc/init.d/redis
 chmod +x /etc/init.d/redis
 
 # Start redis

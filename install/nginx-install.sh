@@ -21,14 +21,15 @@ cd $NGINX_DIR
 --prefix=/opt/nginx \
 --with-http_gzip_static_module \
 --pid-path=/var/run \
---with-pcre
+--with-pcre \
+>> /tmp/nginx.build.log 2>&1
 
 # Build and Install
-make
-make install
+make >> /tmp/nginx.build.log 2>&1
+make install >> /tmp/nginx.build.log 2>&1
 
 # Download the config
-curl -L http://git.io/IGCwnw > /opt/nginx/conf/nginx.conf
+curl -sL http://git.io/IGCwnw > /opt/nginx/conf/nginx.conf
 
 # Create the log dir
 mkdir /var/logs/nginx

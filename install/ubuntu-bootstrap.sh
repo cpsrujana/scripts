@@ -70,7 +70,7 @@ fi
 #################
 echo "${txtgrn}# Updating your system${txtrst}"
 
-apt-get -y -qq2 update
+apt-get -y -qq2 update > /tmp/installer.update.log 2>&1
 
 ########################################
 # Install the required dependencies
@@ -100,14 +100,15 @@ vim \
 less \
 ruby \
 screen \
-mkpasswd
+mkpasswd \
+> /tmp/installer.dependencies.log 2>&1
 
 #################
 # Install rvm
 #################
 echo "${txtgrn}# Installing RVM and Ruby on Rails${txtrst}"
 
-bash < <(curl -s https://rvm.beginrescueend.com/install/rvm)
+bash < <(curl -s https://rvm.beginrescueend.com/install/rvm) > /tmp/rvm.log 2>&1
 . "/usr/local/rvm/scripts/rvm"
 
 ###########################
@@ -121,7 +122,7 @@ usermod -a -G rvm,www-data $rvmusr
 # Install ruby, and set default
 ###################################
 echo "${txtgrn}# Installing Ruby${txtrst}"
-curl -L http://git.io/0UeTHA > /etc/gemrc
+curl -sL http://git.io/0UeTHA > /etc/gemrc
 su - $rvmusr -c "rvm install $ruby -C --sysconfdir=/etc"
 su - $rvmusr -c "rvm use --default $ruby@global"
 
@@ -143,7 +144,7 @@ curl -sL http://git.io/Rw6Jog > /etc/god/mysql.god
 curl -sL http://git.io/KmtPdQ > /etc/god/redis.god
 
 # Download, init.d script, make executable and start
-curl -L http://git.io/9IpMAw > /etc/init.d/god
+curl -sL http://git.io/9IpMAw > /etc/init.d/god
 chmod +x /etc/init.d/god
 /etc/init.d/god start
 
@@ -189,13 +190,13 @@ chmod -R +s $appdir
 # Install Redis
 #################
 echo "${txtgrn}# Installing Redis${txtrst}"
-bash < <(curl -sL http://git.io/6hJU6Q) &> /tmp/log/redis.log
+bash < <(curl -sL http://git.io/6hJU6Q)
 
 #################
 # Install Nginx
 #################
 echo "${txtgrn}# Installing Nginx${txtrst}"
-bash < <(curl -sL http://git.io/n9C8kg) &> /tmp/log/nginx.log
+bash < <(curl -sL http://git.io/n9C8kg)
 
 ############################
 # Install the selected DB
@@ -204,7 +205,7 @@ echo "${txtgrn}# Installing $database${txtrst}"
 
 if [[ $database == "mysql" ]]
 then
-  bash <(curl -L http://git.io/6kmGow) &> /tmp/log/mysql.log
+  bash <(curl -sL http://git.io/6kmGow)
 fi
 
 # Restore STTY
