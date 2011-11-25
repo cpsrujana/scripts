@@ -27,7 +27,10 @@ cp src/redis-check-aof /opt/redis/
 cp src/redis-check-dump /opt/redis/
 
 # Download the pre-defined config
-curl -L http://git.io/w4GcUg > /etc/default/redis
+curl -L http://git.io/pu0alA > /etc/default/redis
+
+# Download the init script, and make executable
+curl -L http://git.io/w4GcUg > /etc/init.d/redis
 chmod +x /etc/init.d/redis
 
 # Start redis
