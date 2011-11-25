@@ -182,7 +182,7 @@ chmod -R +s $APPDIR
 #################
 echo "# Installing Nginx"
 
-bash < <(curl -s http://git.io/n9C8kg)
+bash < <(curl -sL http://git.io/n9C8kg)
 
 ############################
 # Install the selected DB
@@ -191,7 +191,7 @@ echo "# Installing $DATABASE"
 
 if [[ $DATABASE == "mysql" ]]
 then
-  bash < <(curl -s http://git.io/6kmGow)
+  bash < <(curl -sL http://git.io/6kmGow)
 fi
 
 # Restore STTY
