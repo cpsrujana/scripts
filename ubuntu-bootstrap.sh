@@ -2,14 +2,11 @@
 
 #########
 # TODO: Add an option for different database installs
-# TODO: Add an option for updating, and installing requirements for different systems
-# TODO: Move variable installs to remote scripts
 #########
 
 STTY_ORIG=`stty -g`
 APPDIR="/opt/apps"
-DATABASE="none"
-SYSTEM=
+DATABASE="mysql"
 RVMUSR=`whoami`
 RUBY="1.9.2-head"
 DEPLOY_USER="deploy"
@@ -93,7 +90,6 @@ git-core \
 imagemagick \
 ghostscript \
 libmagick9-dev \
-mysql-client \
 curl \
 wget \
 vim \
@@ -123,12 +119,6 @@ usermod -a -G rvm,www-data $RVMUSR
 curl -L http://bit.ly/sRbqye > /etc/gemrc
 su - $RVMUSR -c "rvm install $RUBY -C --sysconfdir=/etc"
 su - $RVMUSR -c "rvm use --default $RUBY@global"
-
-#################
-# Install Rails
-#################
-# Disabled, installed per app via bundler
-# gem install rails bundler --no-ri --no-rdoc
 
 #################
 # Install God
@@ -177,28 +167,7 @@ function create_deployment_user {
   fi
 }
 
-create_deployment_user
-
-#################
-# Install Nginx
-#################
-echo "# Installing Ngnx"
-
-NGINX_URL="http://www.nginx.org/download/nginx-1.0.2.tar.gz"
-NGINX_TGZ="nginx-1.0.2.tar.gz"
-NGINX_DIR="nginx-1.0.2"
-
-wget $NGINX_URL
-tar zvxf $NGINX_TGZ
-cd $NGINX_DIR
-
-./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre
-
-make
-make install
-
-curl -L http://bit.ly/w2Xmzj > /opt/nginx/conf/nginx.conf         # Nginx Base Config
-/opt/nginx/sbin/nginx                                             # Start the server
+create_deployment_user                                            # Start the server
 
 #################
 # App Dir
@@ -208,70 +177,15 @@ chown -R root:www-data $APPDIR
 chmod -R 2775 $APPDIR
 chmod -R +s $APPDIR
 
-##########################
-# MySQL
-##########################
+#################
+# Install Nginx
+#################
+echo "# Installing Nginx"
 
-if [[ $DATABASE == "mysql" ]]
-then
+############################
+# Install the selected DB
+############################
+echo "# Installing $DATABASE"
 
-  MYSQL_PERCENT=40
-  function set_mysql_password {
-    echo "What would you like your MySQL password to be?"
-    read MYSQL_PASSWORD
-
-    if [ -n "$MYSQL_PASSWORD" ]; then
-      echo "Confirm your MySQL password:"
-      read MYSQL_PASSWORD_CONFIRM
-      
-      if [ -n "$MYSQL_PASSWORD_CONFIRM" ]; then
-        if [ ! "$MYSQL_PASSWORD" == "$MYSQL_PASSWORD_CONFIRM" ]; then
-          echo "Passwords did not match"
-          set_mysql_password
-        fi
-      fi
-    else
-      echo "Password cannot be blank"
-      set_mysql_password
-    fi
-  }
-  set_mysql_password
-
-  echo "# Installing MySQL"
-
-  echo "mysql-server-5.1 mysql-server/root_password password $MYSQL_PASSWORD" | debconf-set-selections
-  echo "mysql-server-5.1 mysql-server/root_password_again password $MYSQL_PASSWORD" | debconf-set-selections
-  apt-get -y install mysql-server mysql-client
-
-  echo "Sleeping while MySQL starts up for the first time..."
-  sleep 5
-
-  # Tunes MySQL's memory usage to utilize the percentage of memory you specify, defaulting to 40%
-  sed -i -e 's/^#skip-innodb/skip-innodb/' /etc/mysql/my.cnf # disable innodb - saves about 100M
-
-  MEM=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo) # how much memory in MB this system has
-  MYMEM=$((MEM*MYSQL_PERCENT/100)) # how much memory we'd like to tune mysql with
-  MYMEMCHUNKS=$((MYMEM/4)) # how many 4MB chunks we have to play with
-
-  # mysql config options we want to set to the percentages in the second list, respectively
-  OPTLIST=(key_buffer sort_buffer_size read_buffer_size read_rnd_buffer_size myisam_sort_buffer_size query_cache_size)
-  DISTLIST=(75 1 1 1 5 15)
-
-  for opt in ${OPTLIST[@]}; do
-    sed -i -e "/\[mysqld\]/,/\[.*\]/s/^$opt/#$opt/" /etc/mysql/my.cnf
-  done
-
-  for i in ${!OPTLIST[*]}; do
-    val=$(echo | awk "{print int((${DISTLIST[$i]} * $MYMEMCHUNKS/100))*4}")
-    if [ $val -lt 4 ]
-      then val=4
-    fi
-    config="${config}\n${OPTLIST[$i]} = ${val}M"
-  done
-
-  sed -i -e "s/\(\[mysqld\]\)/\1\n$config\n/" /etc/mysql/my.cnf
-  sed -i -e "s/\(\[mysqld\]\)/\1\npid = \/var\/run\/mysqld\/mysqld.pid/" /etc/mysql/my.cnf
-  service mysql restart
-fi
-
+# Restore STTY
 stty $STTY_ORIG
