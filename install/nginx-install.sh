@@ -28,7 +28,7 @@ cd $NGINX_DIR
 make && make install
 
 # Download the config
-curl -L http://bit.ly/w2Xmzj > /opt/nginx/conf/nginx.conf
+curl -L http://git.io/IGCwnw > /opt/nginx/conf/nginx.conf
 
 # Start Nginx
 /opt/nginx/sbin/nginx

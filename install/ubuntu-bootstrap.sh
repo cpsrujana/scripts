@@ -130,7 +130,7 @@ su - $RVMUSR -c "rvm wrapper $RUBY@global bootup god"
 mkdir /etc/god
 
 # God Configuration Scripts
-curl -L http://git.io/jA7JyA > /etc/default/god
+curl -L http://git.io/si9nvQ > /etc/default/god
 curl -L http://git.io/GIkhIA > /etc/god/file_watch.god
 curl -L http://git.io/M_3Wwg > /etc/god/nginx.god
 curl -L http://git.io/Rw6Jog > /etc/god/mysql.god
@@ -182,10 +182,17 @@ chmod -R +s $APPDIR
 #################
 echo "# Installing Nginx"
 
+bash < <(curl -s http://git.io/n9C8kg)
+
 ############################
 # Install the selected DB
 ############################
 echo "# Installing $DATABASE"
+
+if [[ $DATABASE == "mysql" ]]
+then
+  bash < <(curl -s http://git.io/6kmGow)
+fi
 
 # Restore STTY
 stty $STTY_ORIG
