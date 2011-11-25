@@ -16,7 +16,7 @@ tar zvxf $REDIS_TGZ
 
 # Move into the directory and build
 cd $REDIS_DIR
-make
+make -s
 
 # Copy the executables to the /opt/redis directory
 mkdir /opt/redis
@@ -34,5 +34,4 @@ curl -L http://git.io/w4GcUg > /etc/init.d/redis
 chmod +x /etc/init.d/redis
 
 # Start redis
-echo "# Starting Redis"
 /etc/init.d/redis start

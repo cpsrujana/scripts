@@ -6,10 +6,15 @@
 # and tun it to 40% memory usage
 #######################################
 
+txtrst=$(tput sgr0)
+txtred=$(tput setaf 1)    # Red
+txtgrn=$(tput setaf 2)    # Green
+txtylw=$(tput setaf 3)    # Yellow
+
 #######################################
 # Install Required Dependencies
 #######################################
-apt-get -y -q=2 install mysql-client libmysqlclient-dev
+apt-get -y -qq install mysql-client libmysqlclient-dev
 
 #######################################
 # Install MySQL
@@ -17,33 +22,33 @@ apt-get -y -q=2 install mysql-client libmysqlclient-dev
 
 MYSQL_PERCENT=40
 function set_mysql_password {
-  echo "What would you like your MySQL password to be?"
+  echo "${txtylw}What would you like your MySQL password to be?${txtrst}"
   read MYSQL_PASSWORD
 
   if [ -n "$MYSQL_PASSWORD" ]; then
-    echo "Confirm your MySQL password:"
+    echo "${txtylw}Confirm your MySQL password:${txtrst}"
     read MYSQL_PASSWORD_CONFIRM
     
     if [ -n "$MYSQL_PASSWORD_CONFIRM" ]; then
       if [ ! "$MYSQL_PASSWORD" == "$MYSQL_PASSWORD_CONFIRM" ]; then
-        echo "Passwords did not match"
+        echo "${txtrest}Passwords did not match${txtrst}"
         set_mysql_password
       fi
     fi
   else
-    echo "Password cannot be blank"
+    echo "${txtred}Password cannot be blank${txtrst}"
     set_mysql_password
   fi
 }
 set_mysql_password
 
-echo "# Installing MySQL"
+echo "${txtgrn}# Installing MySQL${txtrst}"
 
 echo "mysql-server-5.1 mysql-server/root_password password $MYSQL_PASSWORD" | debconf-set-selections
 echo "mysql-server-5.1 mysql-server/root_password_again password $MYSQL_PASSWORD" | debconf-set-selections
-apt-get -y install mysql-server mysql-client
+apt-get -y -qq install mysql-server mysql-client
 
-echo "Sleeping while MySQL starts up for the first time..."
+echo "${txtgrn}Sleeping while MySQL starts up for the first time...${txtrst}"
 sleep 5
 
 # Tunes MySQL's memory usage to utilize the percentage of memory you specify, defaulting to 40%

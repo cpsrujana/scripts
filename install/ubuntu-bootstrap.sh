@@ -4,12 +4,17 @@
 # TODO: Add an option for different database installs
 #########
 
-STTY_ORIG=`stty -g`
-APPDIR="/opt/apps"
-DATABASE="mysql"
-RVMUSR=`whoami`
-RUBY="1.9.2-head"
-DEPLOY_USER="deploy"
+txtrst=$(tput sgr0)
+txtred=$(tput setaf 1)    # Red
+txtgrn=$(tput setaf 2)    # Green
+txtylw=$(tput setaf 3)    # Yellow
+
+stty_orig=`stty -g`
+appdir="/opt/apps"
+database="mysql"
+rvmusr=`whoami`
+ruby="1.9.2-head"
+deploy_usr="deploy"
 
 usage()
 {
@@ -35,16 +40,16 @@ do
       exit 1
       ;;
     a)
-      APPDIR=$OPTARG
+      appdir=$OPTARG
       ;;
     d)
-      DATABASE=$OPTARG
+      database=$OPTARG
       ;;
     r)
-      RUBY=$OPTARG
+      ruby=$OPTARG
       ;;
     u)
-      RVMUSR=$OPTARG
+      rvmusr=$OPTARG
       ;;
     ?)
       usage
@@ -56,23 +61,23 @@ done
 stty -echo
 
 if [ "$(whoami)" != "root" ]; then
-  echo "You must be root to run this script."
+  echo "${txtred}You must be root to run this script.${txtrst}"
   exit 1
 fi
 
 #################
 # System Update
 #################
-echo "# Updating your system"
+echo "${txtgrn}# Updating your system${txtrst}"
 
-apt-get -y -q=2 update
+apt-get -y -qq2 update
 
 ########################################
 # Install the required dependencies
 ########################################
-echo "# Installing Dependencies"
+echo "${txtgrn}# Installing Dependencies${txtrst}"
 
-apt-get -y -q=2 install build-essential \
+apt-get -y -qq install build-essential \
 libxml2-dev \
 libxslt-dev \
 libcurl4-openssl-dev \
@@ -100,7 +105,7 @@ mkpasswd
 #################
 # Install rvm
 #################
-echo "# Installing RVM and Ruby on Rails"
+echo "${txtgrn}# Installing RVM and Ruby on Rails${txtrst}"
 
 bash < <(curl -s https://rvm.beginrescueend.com/install/rvm)
 . "/usr/local/rvm/scripts/rvm"
@@ -108,31 +113,34 @@ bash < <(curl -s https://rvm.beginrescueend.com/install/rvm)
 ###########################
 # Setup RVM environment
 ###########################
-echo '[[ -s "/usr/local/rvm/scripts/rvm" ]] && source "/usr/local/rvm/scripts/rvm"' >> /home/$RVMUSR/.profile
-echo "# Adding users to rvm and www-data groups"
-usermod -a -G rvm,www-data $RVMUSR
+echo '[[ -s "/usr/local/rvm/scripts/rvm" ]] && source "/usr/local/rvm/scripts/rvm"' >> /home/$rvmusr/.profile
+echo "${txtgrn}# Adding users to rvm and www-data groups${txtrst}"
+usermod -a -G rvm,www-data $rvmusr
 
 ###################################
 # Install ruby, and set default
 ###################################
+echo "${txtgrn}# Installing Ruby${txtrst}"
 curl -L http://git.io/0UeTHA > /etc/gemrc
-su - $RVMUSR -c "rvm install $RUBY -C --sysconfdir=/etc"
-su - $RVMUSR -c "rvm use --default $RUBY@global"
+su - $rvmusr -c "rvm install $ruby -C --sysconfdir=/etc"
+su - $rvmusr -c "rvm use --default $ruby@global"
 
 #################
 # Install God
 #################
-su - $RVMUSR -c "gem install god"
-su - $RVMUSR -c "rvm wrapper $RUBY@global bootup god"
+echo "${txtgrn}# Installing God${txtrst}"
+su - $rvmusr -c "gem install god"
+su - $rvmusr -c "rvm wrapper $ruby@global bootup god"
 
 # Create the god directory
 mkdir /etc/god
 
 # God Configuration Scripts
-curl -L http://git.io/si9nvQ > /etc/default/god
-curl -L http://git.io/GIkhIA > /etc/god/file_watch.god
-curl -L http://git.io/M_3Wwg > /etc/god/nginx.god
-curl -L http://git.io/Rw6Jog > /etc/god/mysql.god
+curl -sL http://git.io/si9nvQ > /etc/default/god
+curl -sL http://git.io/GIkhIA > /etc/god/file_watch.god
+curl -sL http://git.io/M_3Wwg > /etc/god/nginx.god
+curl -sL http://git.io/Rw6Jog > /etc/god/mysql.god
+curl -sL http://git.io/KmtPdQ > /etc/god/redis.god
 
 # Download, init.d script, make executable and start
 curl -L http://git.io/9IpMAw > /etc/init.d/god
@@ -142,26 +150,26 @@ chmod +x /etc/init.d/god
 #################
 # Deployment User
 #################
+echo "${txtgrn}# Creating Deployment User${txtrst}"
 function create_deployment_user {
-  echo "What would you like your deployment password to be?"
-  read DEPLOY_PASSWORD
+  echo "${txtylw}What would you like your deployment password to be?${txtrst}"
+  read deploy_password
 
-  if [ -n "$DEPLOY_PASSWORD" ]; then
-    echo "Confirm your deployment password:"
-    read DEPLOY_PASSWORD_CONFIRM
+  if [ -n "$deploy_password" ]; then
+    echo "${txtylw}Confirm your deployment password:${txtrst}"
+    read deploy_password_confirm
     
-    if [ -n "$DEPLOY_PASSWORD_CONFIRM" ]; then
-      if [ ! "$DEPLOY_PASSWORD" == "$DEPLOY_PASSWORD_CONFIRM" ]; then
-        echo "Passwords did not match"
+    if [ -n "$deploy_password_confirm" ]; then
+      if [ ! "$deploy_password" == "$deploy_password_confirm" ]; then
+        echo "${txtred}Passwords did not match${txtrst}"
         create_deployment_user
       else
-        echo "Creating Deployment User"
-        useradd $DEPLOY_USER -s /bin/bash -d /home/$DEPLOY_USER -m -p `mkpasswd $DEPLOY_PASSWORD`
-        usermod -a -G rvm,www-data $DEPLOY_USER
+        useradd $deploy_usr -s /bin/bash -d /home/$deploy_usr -m -p `mkpasswd $deploy_password`
+        usermod -a -G rvm,www-data $deploy_usr
       fi
     fi
   else
-    echo "Password cannot be blank"
+    echo "${txtred}Password cannot be blank${txtrst}"
     create_deployment_user
   fi
 }
@@ -171,32 +179,33 @@ create_deployment_user
 #################
 # App Dir
 #################
-mkdir -p $APPDIR
-chown -R root:www-data $APPDIR
-chmod -R 2775 $APPDIR
-chmod -R +s $APPDIR
+echo "${txtgrn}# Creating Application Directory${txtrst}"
+mkdir -p $appdir
+chown -R root:www-data $appdir
+chmod -R 2775 $appdir
+chmod -R +s $appdir
 
 #################
 # Install Redis
 #################
-echo "# Installing Redis"
-bash < <(curl -sL http://git.io/6hJU6Q)
+echo "${txtgrn}# Installing Redis${txtrst}"
+bash < <(curl -sL http://git.io/6hJU6Q) &> /tmp/log/redis.log
 
 #################
 # Install Nginx
 #################
-echo "# Installing Nginx"
-bash < <(curl -sL http://git.io/n9C8kg)
+echo "${txtgrn}# Installing Nginx${txtrst}"
+bash < <(curl -sL http://git.io/n9C8kg) &> /tmp/log/nginx.log
 
 ############################
 # Install the selected DB
 ############################
-echo "# Installing $DATABASE"
+echo "${txtgrn}# Installing $database${txtrst}"
 
-if [[ $DATABASE == "mysql" ]]
+if [[ $database == "mysql" ]]
 then
-  bash <(curl -L http://git.io/6kmGow)
+  bash <(curl -L http://git.io/6kmGow) &> /tmp/log/mysql.log
 fi
 
 # Restore STTY
-stty $STTY_ORIG
+stty $stty_orig
