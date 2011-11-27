@@ -18,9 +18,9 @@ tar zxf $NGINX_TGZ
 cd $NGINX_DIR
 
 # Build and Install
-./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre >> /tmp/nginx.build.log 2>&1
-make >> /tmp/nginx.build.log 2>&1
-make install >> /tmp/nginx.build.log 2>&1
+./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre
+make
+make install
 
 # Download the config
 curl -sL http://git.io/IGCwnw > /opt/nginx/conf/nginx.conf

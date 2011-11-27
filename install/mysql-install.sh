@@ -14,7 +14,7 @@ txtylw=$(tput setaf 3)    # Yellow
 #######################################
 # Install Required Dependencies
 #######################################
-apt-get -y -qq install mysql-client libmysqlclient-dev >> /tmp/mysql.build.log 2>&1
+apt-get -y -qq install mysql-client libmysqlclient-dev
 
 #######################################
 # Install MySQL
@@ -42,9 +42,10 @@ function set_mysql_password {
 }
 set_mysql_password
 
+echo "${txtgrn}Continuing with MySQL Installation${txtrst}"
 echo "mysql-server-5.1 mysql-server/root_password password $MYSQL_PASSWORD" | debconf-set-selections
 echo "mysql-server-5.1 mysql-server/root_password_again password $MYSQL_PASSWORD" | debconf-set-selections
-apt-get -y -qq install mysql-server mysql-client >> /tmp/mysql.build.log 2>&1
+apt-get -y -qq install mysql-server mysql-client
 
 echo "${txtgrn}Sleeping while MySQL starts up for the first time...${txtrst}"
 sleep 5

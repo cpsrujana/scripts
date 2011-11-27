@@ -16,7 +16,7 @@ tar zxf $REDIS_TGZ
 
 # Move into the directory and build
 cd $REDIS_DIR
-make > /tmp/redis.build.log 2>&1
+make
 
 # Copy the executables to the /opt/redis directory
 mkdir /opt/redis

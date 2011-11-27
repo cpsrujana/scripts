@@ -70,7 +70,7 @@ fi
 #################
 echo "${txtgrn}Updating your system${txtrst}"
 
-apt-get -y -qq2 update > /tmp/installer.update.log 2>&1
+apt-get -y -qq2 update
 
 ########################################
 # Install the required dependencies
@@ -100,15 +100,14 @@ vim \
 less \
 ruby \
 screen \
-mkpasswd \
-> /tmp/installer.dependencies.log 2>&1
+mkpasswd
 
 #################
 # Install rvm
 #################
 echo "${txtgrn}Installing RVM and Ruby on Rails${txtrst}"
 
-bash < <(curl -s https://rvm.beginrescueend.com/install/rvm) > /tmp/rvm.log 2>&1
+bash < <(curl -s https://rvm.beginrescueend.com/install/rvm)
 . "/usr/local/rvm/scripts/rvm"
 
 ###########################
