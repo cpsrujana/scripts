@@ -30,6 +30,7 @@ God.watch do |w|
 
      restart.condition(:restart_file_touched) do |c|
        c.interval = 5.seconds
+       c.transition = :restart
        c.restart_file = '/tmp/restart_nginx.txt'
      end
 

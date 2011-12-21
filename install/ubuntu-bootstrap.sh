@@ -188,8 +188,8 @@ chmod -R +s $appdir
 #################
 # Install Redis
 #################
-echo "${txtgrn}Installing Redis${txtrst}"
-bash < <(curl -sL http://git.io/6hJU6Q)
+# echo "${txtgrn}Installing Redis${txtrst}"
+# bash < <(curl -sL http://git.io/6hJU6Q)
 
 #################
 # Install Nginx

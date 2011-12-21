@@ -1,4 +1,4 @@
-God.load "/etc/god/watch.god" # Load the file restart script
+God.load "/etc/god/file_watch.god" # Load the file restart script
 God.load "/etc/god/nginx.god" # Load the nginx watch script
 God.load "/etc/god/mysql.god" # Load the MySQL watch script
 
