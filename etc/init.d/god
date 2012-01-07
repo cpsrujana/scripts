@@ -26,15 +26,10 @@ test -x $GOD_BIN || exit 0
 
 RETVAL=0
 
-if [ -f $GOD_PID ]; then
-  echo -n "$DESC already running. Aborting.\n"
-  exit $RETVAL
-fi;
-
 case "$1" in
   start)
     echo -n "Starting $DESC:\n"
-    $GOD_BIN -c $GOD_CONFIG -P $GOD_PID -l $GOD_LOG --log-level debug
+    $GOD_BIN -c $GOD_CONFIG -P $GOD_PID -l $GOD_LOG
     RETVAL=$?
     ;;
   stop)

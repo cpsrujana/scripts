@@ -26,11 +26,6 @@ test -x $REDIS_BIN || exit 0
 
 RETVAL=0
 
-if [ -f $REDIS_PID ]; then
-  echo -n "$DESC already running. Aborting.\n"
-  exit $RETVAL
-fi;
-
 case "$1" in
   start)
     echo -n "Starting $DESC:\n"

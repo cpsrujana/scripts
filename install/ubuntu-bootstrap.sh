@@ -15,6 +15,7 @@ database="mysql"
 rvmusr=`whoami`
 ruby="1.9.2-head"
 deploy_usr="deploy"
+redis="false"
 
 usage()
 {
@@ -25,10 +26,11 @@ This script installs rvm, nginx, and mysql(optional)
 
 OPTIONS:
   -h    Show this message
-  -a    Set the directory for your rails apps - default: $APPDIR
+  -a    Set the directory for your rails apps - default: $appdir
   -d    Database to install. (mysql, postgres, sqlite, none) - default: none
-  -r    Ruby version to install - default: $RUBY
-  -u    Default RVM user - default: $RVMUSR
+  -r    Ruby version to install - default: $ruby
+  -u    Default RVM user - default: $rvmusr
+  -i    Install Redis - default: $redis
 EOF
 }
 
@@ -51,6 +53,8 @@ do
     u)
       rvmusr=$OPTARG
       ;;
+    i)
+      redis=$OPTARG
     ?)
       usage
       exit 1
@@ -188,8 +192,11 @@ chmod -R +s $appdir
 #################
 # Install Redis
 #################
-# echo "${txtgrn}Installing Redis${txtrst}"
-# bash < <(curl -sL http://git.io/6hJU6Q)
+if [[ $redis == "true" ]]
+then
+  echo "${txtgrn}Installing Redis${txtrst}"
+  bash < <(curl -sL http://git.io/6hJU6Q)
+fi
 
 #################
 # Install Nginx
