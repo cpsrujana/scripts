@@ -1,6 +1,7 @@
 God.load "/etc/god/file_watch.god" # Load the file restart script
 God.load "/etc/god/nginx.god" # Load the nginx watch script
 God.load "/etc/god/mysql.god" # Load the MySQL watch script
+God.load "/etc/god/redis.god" # Load the MySQL watch script
 
 God.load "/opt/apps/*/current/config/god/*.god" # Capistrano Based Deployments
 God.load "/opt/apps/*/config/god/*.god"         # Static Sites

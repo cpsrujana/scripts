@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#<udf name="hostname" label="System Host Name">
+#<udf name="adminuser" default="admin" label="Admin user name">
+#<udf name="adminpassword" label="Admin user password">
+#<udf name="deployuser" default="admin" label="Admin user name">
+#<udf name="deploypassword" label="Admin user password">
+#<udf name="mysql_password" label="MySQL Password">
+
 #########
 # TODO: Add an option for different database installs
 #########
@@ -14,60 +21,19 @@ appdir="/opt/apps"
 database="mysql"
 rvmusr=`whoami`
 ruby="1.9.2-head"
-deploy_usr="deploy"
-redis="false"
-
-usage()
-{
-cat << EOF
-usage: $0 options
-
-This script installs rvm, nginx, and mysql(optional)
-
-OPTIONS:
-  -h    Show this message
-  -a    Set the directory for your rails apps - default: $appdir
-  -d    Database to install. (mysql, postgres, sqlite, none) - default: none
-  -r    Ruby version to install - default: $ruby
-  -u    Default RVM user - default: $rvmusr
-  -i    Install Redis - default: $redis
-EOF
-}
-
-while getopts "a:d:r:u:h" OPTION
-do
-  case $OPTION in
-    h)
-      usage
-      exit 1
-      ;;
-    a)
-      appdir=$OPTARG
-      ;;
-    d)
-      database=$OPTARG
-      ;;
-    r)
-      ruby=$OPTARG
-      ;;
-    u)
-      rvmusr=$OPTARG
-      ;;
-    i)
-      redis=$OPTARG
-    ?)
-      usage
-      exit 1
-      ;;
-  esac
-done
-
-stty -echo
+redis="true"
 
 if [ "$(whoami)" != "root" ]; then
   echo "${txtred}You must be root to run this script.${txtrst}"
   exit 1
 fi
+
+#################
+# Hostname
+#################
+echo $HOSTNAME > /etc/hostname
+echo -e "\n127.0.0.1 $HOSTNAME.local $HOSTNAME\n" >> /etc/hosts
+service hostname start
 
 #################
 # System Update
@@ -152,33 +118,18 @@ chmod +x /etc/init.d/god
 /etc/init.d/god start
 
 #################
+# Admin User
+#################
+echo "${txtgrn}Creating Deployment User${txtrst}"
+useradd $ADMINUSER -s /bin/bash -d /home/$ADMINUSER -m -p `mkpasswd $ADMINPASSWORD`
+usermod -a -G rvm,www-data $ADMINUSER
+
+#################
 # Deployment User
 #################
 echo "${txtgrn}Creating Deployment User${txtrst}"
-function create_deployment_user {
-  echo "${txtylw}What would you like your deployment password to be?${txtrst}"
-  read deploy_password
-
-  if [ -n "$deploy_password" ]; then
-    echo "${txtylw}Confirm your deployment password:${txtrst}"
-    read deploy_password_confirm
-    
-    if [ -n "$deploy_password_confirm" ]; then
-      if [ ! "$deploy_password" == "$deploy_password_confirm" ]; then
-        echo "${txtred}Passwords did not match${txtrst}"
-        create_deployment_user
-      else
-        useradd $deploy_usr -s /bin/bash -d /home/$deploy_usr -m -p `mkpasswd $deploy_password`
-        usermod -a -G rvm,www-data $deploy_usr
-      fi
-    fi
-  else
-    echo "${txtred}Password cannot be blank${txtrst}"
-    create_deployment_user
-  fi
-}
-
-create_deployment_user
+useradd $DEPLOYUSER -s /bin/bash -d /home/$DEPLOYUSER -m -p `mkpasswd $DEPLOYPASSWORD`
+usermod -a -G rvm,www-data $DEPLOYUSER
 
 #################
 # App Dir
@@ -188,12 +139,6 @@ mkdir -p $appdir
 chown -R root:www-data $appdir
 chmod -R 2775 $appdir
 chmod -R +s $appdir
-
-#################
-# Install Node.JS
-#################
-git clone git://github.com/ry/node.git
-cd node && ./configure && make && make install
 
 #################
 # Install Redis
