@@ -34,7 +34,7 @@ OPTIONS:
 EOF
 }
 
-while getopts "a:d:r:u:h" OPTION
+while getopts "a:d:r:u:i:h" OPTION
 do
   case $OPTION in
     h)
@@ -55,6 +55,7 @@ do
       ;;
     i)
       redis=$OPTARG
+      ;;
     ?)
       usage
       exit 1
@@ -111,7 +112,7 @@ mkpasswd
 #################
 echo "${txtgrn}Installing RVM and Ruby on Rails${txtrst}"
 
-bash < <(curl -s https://rvm.beginrescueend.com/install/rvm)
+bash -s stable < <(curl -s https://raw.github.com/wayneeseguin/rvm/master/binscripts/rvm-installer)
 . "/usr/local/rvm/scripts/rvm"
 
 ###########################
