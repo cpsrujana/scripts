@@ -134,6 +134,7 @@ su - $rvmusr -c "rvm use --default $ruby@global"
 # Install God
 #################
 echo "${txtgrn}Installing God${txtrst}"
+su - $rvmusr -c "rvm gemset use global"
 su - $rvmusr -c "gem install god"
 su - $rvmusr -c "rvm wrapper $ruby@global bootup god"
 
@@ -151,6 +152,7 @@ curl -sL http://git.io/KmtPdQ > /etc/god/redis.god
 curl -sL http://git.io/9IpMAw > /etc/init.d/god
 chmod +x /etc/init.d/god
 /etc/init.d/god start
+update-rc.d god defaults
 
 #################
 # Deployment User

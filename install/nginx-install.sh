@@ -10,6 +10,9 @@ NGINX_URL="http://www.nginx.org/download/nginx-1.0.2.tar.gz"
 NGINX_TGZ="nginx-1.0.2.tar.gz"
 NGINX_DIR="nginx-1.0.2"
 
+# Download the upload module
+git clone https://github.com/vkholodkov/nginx-upload-module.git
+
 # Download and unpack Nginx
 wget -q $NGINX_URL
 tar zxf $NGINX_TGZ
@@ -18,7 +21,7 @@ tar zxf $NGINX_TGZ
 cd $NGINX_DIR
 
 # Build and Install
-./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre
+./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre --add-module=../nginx-upload-module
 make
 make install
 
