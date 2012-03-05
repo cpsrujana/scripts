@@ -11,7 +11,7 @@ NGINX_TGZ="nginx-1.0.2.tar.gz"
 NGINX_DIR="nginx-1.0.2"
 
 # Download the upload module
-git clone https://github.com/vkholodkov/nginx-upload-module.git
+git clone https://github.com/vkholodkov/nginx-upload-module.git -b 2.2
 
 # Download and unpack Nginx
 wget -q $NGINX_URL
