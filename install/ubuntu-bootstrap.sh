@@ -165,7 +165,7 @@ function create_deployment_user {
   if [ -n "$deploy_password" ]; then
     echo "${txtylw}Confirm your deployment password:${txtrst}"
     read deploy_password_confirm
-    
+
     if [ -n "$deploy_password_confirm" ]; then
       if [ ! "$deploy_password" == "$deploy_password_confirm" ]; then
         echo "${txtred}Passwords did not match${txtrst}"
