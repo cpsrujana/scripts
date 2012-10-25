@@ -13,7 +13,6 @@ stty_orig=`stty -g`
 appdir="/opt/apps"
 database="none"
 rbuser=`whoami`
-ruby="1.9.2-head"
 deploy_usr="deploy"
 redis="false"
 
@@ -22,7 +21,7 @@ usage()
 cat << EOF
 usage: $0 options
 
-This script installs ruby, nginx, nodejs, redis(optional), and mysql(optional)
+This script installs the latest ruby, nginx 1.0.2, nodejs, redis(optional), and mysql(optional)
 
 OPTIONS:
   -h    Show this message
@@ -46,9 +45,6 @@ do
       ;;
     d)
       database=$OPTARG
-      ;;
-    r)
-      ruby=$OPTARG
       ;;
     u)
       rbuser=$OPTARG
@@ -105,7 +101,8 @@ wget \
 vim \
 less \
 ruby \
-screen
+screen \
+mkpasswd
 
 #################
 # Deployment User
