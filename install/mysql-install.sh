@@ -20,7 +20,7 @@ apt-get -y -qq install mysql-client libmysqlclient-dev
 # Install MySQL
 #######################################
 
-MYSQL_PERCENT=40
+MYSQL_PERCENT=20
 function set_mysql_password {
   echo "${txtylw}What would you like your MySQL password to be?${txtrst}"
   read MYSQL_PASSWORD
@@ -28,7 +28,7 @@ function set_mysql_password {
   if [ -n "$MYSQL_PASSWORD" ]; then
     echo "${txtylw}Confirm your MySQL password:${txtrst}"
     read MYSQL_PASSWORD_CONFIRM
-    
+
     if [ -n "$MYSQL_PASSWORD_CONFIRM" ]; then
       if [ ! "$MYSQL_PASSWORD" == "$MYSQL_PASSWORD_CONFIRM" ]; then
         echo "${txtrest}Passwords did not match${txtrst}"
