@@ -122,7 +122,6 @@ function create_deployment_user {
         create_deployment_user
       else
         useradd $deploy_usr -s /bin/bash -d /home/$deploy_usr -m -p `mkpasswd $deploy_password`
-        usermod -a -G rvm,www-data $deploy_usr
       fi
     fi
   else
