@@ -139,28 +139,6 @@ echo "${txtgrn}Installing Ruby${txtrst}"
 bash < <(curl -sL http://git.io/nYUyIA)
 
 #################
-# Install God
-#################
-echo "${txtgrn}Installing God${txtrst}"
-gem install god
-
-# Create the god directory
-mkdir /etc/god
-
-# God Configuration Scripts
-curl -sL http://git.io/si9nvQ > /etc/default/god
-curl -sL http://git.io/GIkhIA > /etc/god/file_watch.god
-curl -sL http://git.io/M_3Wwg > /etc/god/nginx.god
-curl -sL http://git.io/Rw6Jog > /etc/god/mysql.god
-curl -sL http://git.io/KmtPdQ > /etc/god/redis.god
-
-# Download, init.d script, make executable and start
-curl -sL http://git.io/9IpMAw > /etc/init.d/god
-chmod +x /etc/init.d/god
-/etc/init.d/god start
-update-rc.d god defaults
-
-#################
 # App Dir
 #################
 echo "${txtgrn}Creating Application Directory${txtrst}"
@@ -168,12 +146,6 @@ mkdir -p $appdir
 chown -R root:www-data $appdir
 chmod -R 2775 $appdir
 chmod -R +s $appdir
-
-#################
-# Install Node.JS
-#################
-git clone git://github.com/ry/node.git
-cd node && ./configure && make && make install
 
 #################
 # Install Redis
