@@ -98,11 +98,7 @@ ghostscript \
 libmagick9-dev \
 curl \
 wget \
-vim \
-less \
-ruby \
-screen \
-mkpasswd
+vim
 
 #################
 # Deployment User

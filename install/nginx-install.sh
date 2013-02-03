@@ -6,9 +6,9 @@
 #####################################################
 
 # Nginx Defaults
-NGINX_URL="http://www.nginx.org/download/nginx-1.0.2.tar.gz"
-NGINX_TGZ="nginx-1.0.2.tar.gz"
-NGINX_DIR="nginx-1.0.2"
+NGINX_URL="http://www.nginx.org/download/nginx-1.2.6.tar.gz"
+NGINX_TGZ="nginx-1.2.6.tar.gz"
+NGINX_DIR="nginx-1.2.6"
 
 # Download and unpack Nginx
 wget -q $NGINX_URL
