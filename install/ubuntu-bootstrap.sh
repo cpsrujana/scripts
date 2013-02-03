@@ -1,83 +1,24 @@
 #!/bin/bash
 
-#########
-# TODO: Add an option for different database installs
-#########
-
 txtrst=$(tput sgr0)
 txtred=$(tput setaf 1)    # Red
 txtgrn=$(tput setaf 2)    # Green
 txtylw=$(tput setaf 3)    # Yellow
 
-stty_orig=`stty -g`
 appdir="/opt/apps"
-database="none"
 rbuser=`whoami`
 deploy_usr="deploy"
-redis="false"
-
-usage()
-{
-cat << EOF
-usage: $0 options
-
-This script installs the latest ruby, nginx 1.0.2, nodejs, redis(optional), and mysql(optional)
-
-OPTIONS:
-  -h    Show this message
-  -a    Set the directory for your rails apps - default: $appdir
-  -d    Database to install. (mysql, postgres, sqlite, none) - default: none
-  -r    Ruby version to install - default: $ruby
-  -u    Default RVM user - default: $rbuser
-  -i    Install Redis - default: $redis
-EOF
-}
-
-while getopts "a:d:r:u:i:h" OPTION
-do
-  case $OPTION in
-    h)
-      usage
-      exit 1
-      ;;
-    a)
-      appdir=$OPTARG
-      ;;
-    d)
-      database=$OPTARG
-      ;;
-    u)
-      rbuser=$OPTARG
-      ;;
-    i)
-      redis=$OPTARG
-      ;;
-    ?)
-      usage
-      exit 1
-      ;;
-  esac
-done
-
-stty -echo
-
-if [ "$(whoami)" != "root" ]; then
-  echo "${txtred}You must be root to run this script.${txtrst}"
-  exit 1
-fi
 
 #################
 # System Update
 #################
 echo "${txtgrn}Updating your system${txtrst}"
-
 apt-get update
 
 ########################################
 # Install the required dependencies
 ########################################
 echo "${txtgrn}Installing Dependencies${txtrst}"
-
 apt-get -y -qq install build-essential \
 libcurl4-openssl-dev \
 libreadline-dev \
@@ -143,11 +84,8 @@ chmod -R +s $appdir
 #################
 # Install Redis
 #################
-if [[ $redis == "true" ]]
-then
-  echo "${txtgrn}Installing Redis${txtrst}"
-  bash < <(curl -sL http://git.io/6hJU6Q)
-fi
+echo "${txtgrn}Installing Redis${txtrst}"
+bash < <(curl -sL http://git.io/6hJU6Q)
 
 #################
 # Install Nginx
@@ -156,13 +94,7 @@ echo "${txtgrn}# Installing Nginx${txtrst}"
 bash < <(curl -sL http://git.io/n9C8kg)
 
 ############################
-# Install the selected DB
+# Install MySQL
 ############################
-if [[ $database == "mysql" ]]
-then
-  echo "${txtgrn}Installing MySQL${txtrst}"
-  bash <(curl -sL http://git.io/6kmGow)
-fi
-
-# Restore STTY
-stty $stty_orig
+echo "${txtgrn}Installing MySQL${txtrst}"
+bash <(curl -sL http://git.io/6kmGow)
