@@ -79,23 +79,20 @@ apt-get update
 echo "${txtgrn}Installing Dependencies${txtrst}"
 
 apt-get -y -qq install build-essential \
-libxml2-dev \
-libxslt-dev \
 libcurl4-openssl-dev \
 libreadline-dev \
 libncurses5-dev \
 libpcre3-dev \
 libyaml-dev \
-sqlite3 \
 libsqlite3-dev \
 libc6-dev \
+zlib1g-dev \
 ncurses-dev \
 bison \
 autoconf \
 git-core \
 imagemagick \
 ghostscript \
-libmagick9-dev \
 curl \
 wget \
 vim
@@ -129,10 +126,10 @@ function create_deployment_user {
 create_deployment_user
 
 #################
-# Install rvm
+# Install Ruby
 #################
 echo "${txtgrn}Installing Ruby${txtrst}"
-bash < <(curl -sL http://git.io/nYUyIA)
+bash < <(curl -sL http://git.io/dDzlvg
 
 #################
 # App Dir
