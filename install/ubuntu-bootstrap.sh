@@ -129,7 +129,7 @@ create_deployment_user
 # Install Ruby
 #################
 echo "${txtgrn}Installing Ruby${txtrst}"
-bash < <(curl -sL http://git.io/dDzlvg
+bash < <(curl -sL http://git.io/dDzlvg)
 
 #################
 # App Dir
