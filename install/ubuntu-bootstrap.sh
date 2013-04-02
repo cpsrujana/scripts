@@ -36,7 +36,8 @@ imagemagick \
 ghostscript \
 curl \
 wget \
-vim
+vim \
+whois
 
 #################
 # Deployment User
