@@ -19,7 +19,6 @@ cd $REDIS_DIR
 make
 
 # Copy the executables to the /opt/redis directory
-mkdir /opt/redis
 cp src/redis-benchmark /usr/local/bin
 cp src/redis-cli /usr/local/bin
 cp src/redis-server /usr/local/bin
