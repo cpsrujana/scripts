@@ -6,9 +6,9 @@
 #########################################
 
 # Redis Defaults
-REDIS_URL="http://redis.googlecode.com/files/redis-2.6.9.tar.gz"
-REDIS_TGZ="redis-2.6.9.tar.gz"
-REDIS_DIR="redis-2.6.9"
+REDIS_URL="http://redis.googlecode.com/files/redis-2.6.14.tar.gz"
+REDIS_TGZ="redis-2.6.14.tar.gz"
+REDIS_DIR="redis-2.6.14"
 
 # Download and unpack Nginx
 wget -q $REDIS_URL
