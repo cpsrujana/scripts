@@ -18,7 +18,5 @@ save 60 10000
 rdbcompression yes
 dbfilename dump.rdb
 
-dir /opt/redis/
+dir /usr/local
 appendonly no
-
-glueoutputbuf yes
