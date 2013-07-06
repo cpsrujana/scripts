@@ -18,7 +18,7 @@ tar zxf $NGINX_TGZ
 cd $NGINX_DIR
 
 # Build and Install
-./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre --with-http_ssl_module
+./configure --prefix=/opt/nginx --with-http_gzip_static_module --pid-path=/var/run --with-pcre --with-http_ssl_module --with-http_image_filter_module
 make
 make install
 
