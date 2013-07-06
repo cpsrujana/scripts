@@ -20,11 +20,11 @@ make
 
 # Copy the executables to the /opt/redis directory
 mkdir /opt/redis
-cp src/redis-benchmark /opt/redis/
-cp src/redis-cli /opt/redis/
-cp src/redis-server /opt/redis/
-cp src/redis-check-aof /opt/redis/
-cp src/redis-check-dump /opt/redis/
+cp src/redis-benchmark /user/local/bin
+cp src/redis-cli /user/local/bin
+cp src/redis-server /user/local/bin
+cp src/redis-check-aof /user/local/bin
+cp src/redis-check-dump /user/local/bin
 
 # Download the pre-defined config
 curl -sL http://git.io/pu0alA > /etc/default/redis
