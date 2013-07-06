@@ -32,6 +32,7 @@ ncurses-dev \
 bison \
 autoconf \
 git-core \
+libgd2-xpm-dev \
 imagemagick \
 ghostscript \
 curl \
