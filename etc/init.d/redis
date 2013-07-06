@@ -9,7 +9,7 @@
 # Short-Description:    God
 ### END INIT INFO
 
-REDIS_BIN='/opt/redis/redis-server'
+REDIS_BIN='/usr/local/bin/redis-server'
 REDIS_PID='/var/run/redis.pid'
 REDIS_LOG='/var/log/redis.log'
 REDIS_CONFIG='/etc/default/redis'
